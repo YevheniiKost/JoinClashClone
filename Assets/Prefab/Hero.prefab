@@ -63,7 +63,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementSpeed: 10
   _sideMovementSpeed: 20
-  _input: {fileID: 0}
   _sideMovementStartLimit: 0
   _minDistanceBetweenBots: 0.5
   _botNewPositionDisnace: 0.8
@@ -80,7 +79,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 8831359464390744930}
-  _input: {fileID: 0}
 --- !u!1 &6274613459298055900
 GameObject:
   m_ObjectHideFlags: 0
@@ -124,7 +122,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 6, y: 1, z: 2.6}
+  m_Size: {x: 6, y: 1, z: 1.69}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &4771589215486343526
 MonoBehaviour:

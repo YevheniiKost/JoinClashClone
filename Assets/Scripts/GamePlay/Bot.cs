@@ -24,6 +24,12 @@ public class Bot : MonoBehaviour
         _animator.SetFloat(_motionBlendParam, isMoving ? 1 : 0);
     }
 
+    public void DestroyBot()
+    {
+        Instantiate(_separateBotPrefab, transform.position, Quaternion.identity);
+        Destroy(this.gameObject);
+    }
+
     private void Awake()
     {
         _motionBlendParam = Animator.StringToHash("MotionBlend");
@@ -40,11 +46,9 @@ public class Bot : MonoBehaviour
         if (other.GetComponent<Obstacle>())
         {
             GameEvents.RaiseOnDestroyBotEvent(this);
-            Instantiate(_separateBotPrefab, transform.position, Quaternion.identity);
-            Destroy(this.gameObject);
+            DestroyBot();
         }
     }
-
 
     private void SetColor(Material mat)
     {

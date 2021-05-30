@@ -10,7 +10,12 @@ public class GameEvents
 
     public static event GameEventInputHandler OnImplementInputHandler;
     public static event GameEventBot OnDestroyBot;
+    public static event GameEvent OnPlayerDeath;
 
+    public static void RaiseOnPlayerDeathEvent()
+    {
+        OnPlayerDeath?.Invoke();
+    }
     public static void RaiseOnImplementInputHandlerEvent(InputHandler input)
     {
         OnImplementInputHandler?.Invoke(input);

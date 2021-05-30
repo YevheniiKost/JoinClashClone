@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using DG.Tweening;
 
 public class HeroController : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class HeroController : MonoBehaviour
     [SerializeField] private float _sideMovementStartLimit;
     [SerializeField] private float _minDistanceBetweenBots = .5f;
     [SerializeField] private float _botNewPositionDisnace = .8f;
+    [SerializeField] private float _timeForBotToRunToEnemy = 1f;
 
 
     private float _currentLeftSideMovementLimit;
@@ -46,6 +48,19 @@ public class HeroController : MonoBehaviour
         }
     }
 
+    public void AttackEnemy(EnemyBot enemyBot)
+    {
+        if(_bots.Count == 0)
+        {
+            GameEvents.RaiseOnPlayerDeathEvent();
+        }
+
+        var bot = _bots.OrderBy(t => t.transform.position.z).LastOrDefault();
+        _bots.Remove(bot);
+        StartCoroutine(AttackEnemyCoroutine(bot, enemyBot));
+    }
+
+
     private void Awake()
     {
         GameEvents.OnDestroyBot += RemoveBotFromList;
@@ -71,6 +86,14 @@ public class HeroController : MonoBehaviour
         }
 
         HandleBotAnimation(_input.IsMoving);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.GetComponent<Obstacle>())
+        {
+            GameEvents.RaiseOnPlayerDeathEvent();
+        }
     }
 
     private IEnumerator ResetLimitsCoroutine()
@@ -137,6 +160,17 @@ public class HeroController : MonoBehaviour
                 bot.transform.localPosition += new Vector3(0, 0, _botNewPositionDisnace);
             }
         }
+    }
+
+
+    private IEnumerator AttackEnemyCoroutine(Bot bot, EnemyBot enemyBot)
+    {
+        bot.transform.DOMove(enemyBot.transform.position, _timeForBotToRunToEnemy);
+
+        yield return new WaitForSeconds(_timeForBotToRunToEnemy);
+
+        bot.DestroyBot();
+        enemyBot.DestroyEnemyBot();
     }
 
     private void HandleBotAnimation(bool isMoving)
