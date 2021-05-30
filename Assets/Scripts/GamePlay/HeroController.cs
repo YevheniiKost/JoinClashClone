@@ -56,7 +56,7 @@ public class HeroController : MonoBehaviour
         }
 
         var bot = _bots.OrderBy(t => t.transform.position.z).LastOrDefault();
-        _bots.Remove(bot);
+        _bots.RemoveAt(_bots.Count - 1);
         StartCoroutine(AttackEnemyCoroutine(bot, enemyBot));
     }
 
@@ -161,7 +161,6 @@ public class HeroController : MonoBehaviour
             }
         }
     }
-
 
     private IEnumerator AttackEnemyCoroutine(Bot bot, EnemyBot enemyBot)
     {

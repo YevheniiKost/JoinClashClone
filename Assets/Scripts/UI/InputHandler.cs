@@ -16,11 +16,13 @@ public class InputHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     private RectTransform _rect;
     private float _screenWidth;
+    private bool _isGameStarted;
 
     private void Awake()
     {
         _rect = GetComponent<RectTransform>();
         _screenWidth = _rect.rect.width;
+        _isGameStarted = false;
     }
 
     private void Start()
@@ -31,6 +33,12 @@ public class InputHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public void OnPointerDown(PointerEventData eventData)
     {
         _isPlayerHoldingMove = true;
+
+        if (!_isGameStarted)
+        {
+            GameEvents.RaiseOnGameStartedEvent();
+            _isGameStarted = true;
+        }
     }
 
     public void OnPointerUp(PointerEventData eventData)
