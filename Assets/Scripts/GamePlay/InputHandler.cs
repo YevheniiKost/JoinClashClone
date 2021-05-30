@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class InputCatcher : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler
+public class InputHandler : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler
 {
     public bool IsMoving => _isPlayerHoldingMove;
 
@@ -21,6 +21,11 @@ public class InputCatcher : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         _rect = GetComponent<RectTransform>();
         _screenWidth = _rect.rect.width;
+    }
+
+    private void Start()
+    {
+        GameEvents.RaiseOnImplementInputHandlerEvent(this);
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -43,7 +48,6 @@ public class InputCatcher : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         _currentPointerPosition = eventData.position;
         _sideShift = (_currentPointerPosition.x - 540f) / _screenWidth * .5f;
-        Debug.Log(_sideShift);
     }
 
     private void RenewData()
