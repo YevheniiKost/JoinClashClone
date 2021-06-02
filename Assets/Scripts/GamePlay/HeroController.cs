@@ -13,13 +13,16 @@ public class HeroController : MonoBehaviour
     [SerializeField] private float _minDistanceBetweenBots = .5f;
     [SerializeField] private float _botNewPositionDisnace = .8f;
     [SerializeField] private float _timeForBotToRunToEnemy = 1f;
+    [SerializeField] private float _bossKillBotCooldown = 1f;
 
+    public List<Bot> BotsList => _bots;
+    public bool IsFighting => !_isContolledByPlayer;
 
     private float _currentLeftSideMovementLimit;
     private float _currentRightSideMovementLimit;
     private List<Bot> _bots = new List<Bot>();
     private InputHandler _input;
-
+    private bool _isContolledByPlayer;
 
     public void AddBotToList(Bot bot)
     {
@@ -53,13 +56,19 @@ public class HeroController : MonoBehaviour
         if(_bots.Count == 0)
         {
             GameEvents.RaiseOnPlayerDeathEvent();
+            return;
         }
 
-        var bot = _bots.OrderBy(t => t.transform.position.z).LastOrDefault();
-        _bots.RemoveAt(_bots.Count - 1);
+        var bot = _bots.OrderBy(t => -t.transform.position.z).FirstOrDefault();
+        _bots.Remove(bot);
         StartCoroutine(AttackEnemyCoroutine(bot, enemyBot));
     }
 
+    public void StartBossFight(Boss boss)
+    {
+        StartCoroutine(BossFight(boss));
+        _isContolledByPlayer = false;
+    }
 
     private void Awake()
     {
@@ -75,17 +84,16 @@ public class HeroController : MonoBehaviour
 
     private void Start()
     {
+        _isContolledByPlayer = true;
         StartCoroutine(ResetLimitsCoroutine());
     }
 
     private void Update()
     {
-        if (_input.IsMoving)
+        if (_input.IsMoving && _isContolledByPlayer)
         {
             MoveForward();
         }
-
-        HandleBotAnimation(_input.IsMoving);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -102,6 +110,25 @@ public class HeroController : MonoBehaviour
         {
             ResetMovementLimits();
             yield return new WaitForSeconds(.3f);
+        }
+    }
+
+    private IEnumerator BossFight(Boss boss)
+    {
+        for (int i = 0; i < _bots.Count; i++)
+        {
+            if (boss == null)
+            {
+                yield return null;
+                break;
+            }
+            var bot = _bots[i];
+            bot.transform.DOMove(boss.transform.position, _bossKillBotCooldown);
+
+            yield return new WaitForSeconds(_bossKillBotCooldown);
+            RemoveBotFromList(bot);
+            bot.DestroyBot();
+            boss.HitBoss();
         }
     }
 
@@ -165,22 +192,12 @@ public class HeroController : MonoBehaviour
     private IEnumerator AttackEnemyCoroutine(Bot bot, EnemyBot enemyBot)
     {
         bot.transform.DOMove(enemyBot.transform.position, _timeForBotToRunToEnemy);
+        bot.SetFightingAnimation(true);
 
         yield return new WaitForSeconds(_timeForBotToRunToEnemy);
 
         bot.DestroyBot();
         enemyBot.DestroyEnemyBot();
-    }
-
-    private void HandleBotAnimation(bool isMoving)
-    {
-        if (_bots.Count <= 0)
-            return;
-
-        for (int i = 0; i < _bots.Count; i++)
-        {
-            _bots[i].SetMovementAnimation(isMoving);
-        }
     }
 
     private void AddInputHandler(InputHandler input)

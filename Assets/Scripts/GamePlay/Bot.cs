@@ -24,6 +24,11 @@ public class Bot : MonoBehaviour
         _animator.SetFloat(_motionBlendParam, isMoving ? 1 : 0);
     }
 
+    public void SetFightingAnimation(bool isFighting)
+    {
+        _animator.SetBool("IsFighting", isFighting);
+    }
+
     public void DestroyBot()
     {
         Instantiate(_separateBotPrefab, transform.position, Quaternion.identity);

@@ -48,7 +48,7 @@ CapsuleCollider:
   m_Radius: 0.34
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &4342759402215691906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,6 +66,8 @@ MonoBehaviour:
   _sideMovementStartLimit: 0
   _minDistanceBetweenBots: 0.5
   _botNewPositionDisnace: 0.8
+  _timeForBotToRunToEnemy: 1
+  _bossKillBotCooldown: 1
 --- !u!114 &7263583477131675790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -105,7 +107,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6274613459298055900}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4342759402215691910}
@@ -162,7 +164,7 @@ PrefabInstance:
     - target: {fileID: 1782054854466985381, guid: 0177e71dbe31d1c47a28abafddac309c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1782054854466985381, guid: 0177e71dbe31d1c47a28abafddac309c,
         type: 3}

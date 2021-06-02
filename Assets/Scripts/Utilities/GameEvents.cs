@@ -12,7 +12,12 @@ public class GameEvents
     public static event GameEventBot OnDestroyBot;
     public static event GameEvent OnPlayerDeath;
     public static event GameEvent OnGameStarted;
+    public static event GameEvent OnGameWin;
 
+    public static void RaiseOnGameWinEvent()
+    {
+        OnGameWin?.Invoke();
+    }
     public static void RaiseOnGameStartedEvent()
     {
         OnGameStarted?.Invoke();

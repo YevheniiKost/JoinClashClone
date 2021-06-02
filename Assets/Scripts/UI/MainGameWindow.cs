@@ -17,6 +17,11 @@ public class MainGameWindow : MonoBehaviour
         GameEvents.OnGameStarted += StartGameHandler;
     }
 
+    private void OnDestroy()
+    {
+        GameEvents.OnGameStarted -= StartGameHandler;
+    }
+
     private void StartGameHandler()
     {
         _startText.gameObject.SetActive(false);
